@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <!-- CSS bạn đã upload -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="login-container">
+    <div class="login-card">
+
+        <div class="login-header">
+            <h2>Welcome Back</h2>
+            <p>Please login to your account</p>
+        </div>
+
+        <!-- FORM -->
+        <form id="loginForm" method="POST" action="">
+            {{ form.hidden_tag() }}
+
+            <!-- EMAIL -->
+            <div class="form-group">
+                <div class="input-wrapper">
+                    {{ form.username(id="email", placeholder=" ") }}
+                    <label for="email">Email</label>
+                    <span class="focus-border"></span>
+                </div>
+                <span class="error-message" id="error-email"></span>
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="form-group">
+                <div class="input-wrapper password-wrapper">
+                    {{ form.password(id="password", placeholder=" ") }}
+                    <label for="password">Password</label>
+                    <button type="button" id="passwordToggle" class="password-toggle">
+                        <span class="eye-icon"></span>
+                    </button>
+                    <span class="focus-border"></span>
+                </div>
+                <span class="error-message" id="error-password"></span>
+            </div>
+
+            <!-- OPTIONS -->
+            <div class="form-options">
+                <label class="remember-wrapper">
+                    <input type="checkbox" id="remember">
+                    <span class="checkbox-label">
+                        <span class="checkmark"></span>
+                        Remember me
+                    </span>
+                </label>
+                <a href="#" class="forgot-password">Forgot password?</a>
+            </div>
+
+            <!-- LOGIN BUTTON -->
+            <button type="submit" class="btn login-btn">
+                <span class="btn-text">Login</span>
+                <span class="btn-loader"></span>
+            </button>
+
+            <div class="divider"><span>OR</span></div>
+
+            <!-- SOCIAL LOGIN -->
+            <div class="social-login">
+                <button type="button" class="social-btn google-btn">
+                    <span class="social-icon google-icon"></span>
+                    Google
+                </button>
+
+                <button type="button" class="social-btn github-btn">
+                    <span class="social-icon github-icon"></span>
+                    GitHub
+                </button>
+            </div>
+
+            <div class="signup-link">
+                <p>Don't have an account?
+                    <a href="{{ url_for('register') }}">Sign Up</a>
+                </p>
+            </div>
+
+        </form>
+
+        <!-- SUCCESS MESSAGE -->
+        <div class="success-message" id="successMessage">
+            <div class="success-icon">✓</div>
+            <h3>Login Successful!</h3>
+            <p>Redirecting...</p>
+        </div>
+
+    </div>
+</div>
+
+<!-- JS bạn đã upload -->
+<script src="{{ url_for('static', filename='script_main.js') }}"></script>
+<script src="{{ url_for('static', filename='form-utils.js') }}"></script>
+
+</body>
+</html>

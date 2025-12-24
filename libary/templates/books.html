@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h1 class="mt-4">Quản lý sách</h1>
+
+<button class="btn btn-primary mb-3" onclick="loadBooks()">Load books</button>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên sách</th>
+            <th>Tác giả</th>
+        </tr>
+    </thead>
+    <tbody id="book-table"></tbody>
+</table>
+
+<script>
+function loadBooks() {
+    fetch("/library/books")
+        .then(res => res.json())
+        .then(data => {
+            let html = "";
+            data.forEach(book => {
+                html += `
+                    <tr>
+                        <td>${book.id}</td>
+                        <td>${book.name}</td>
+                        <td>${book.author}</td>
+                    </tr>
+                `;
+            });
+            document.getElementById("book-table").innerHTML = html;
+        });
+}
+</script>
+
+{% endblock %}
