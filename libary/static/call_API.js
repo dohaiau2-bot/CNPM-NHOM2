@@ -11,7 +11,7 @@ function start(){
 
 function loadBook(){
     titleTable = 
-    " <tr> <th>Id</th> <th>Name</th> <th>Page Count</th> </tr> "
+    " <tr> <th> Id </th> <th> Name </th> <th> Page Count </th> </tr> "
     fetch(getBookApi)
         .then(function(response){
             return response.json();

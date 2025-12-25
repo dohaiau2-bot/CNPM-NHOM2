@@ -18,7 +18,7 @@ def libary_app(config_file="config.py"):
     app = Flask(__name__)
     CORS(app)
     app.config.from_pyfile(config_file)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///libary.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
     ma.init_app(app)
