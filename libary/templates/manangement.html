@@ -1,41 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="{{url_for('static',filename='API.css') }}" rel="stylesheet" />
-
-    <title>Home</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book Management</title>
+    <link href="{{ url_for('static', filename='API.css') }}" rel="stylesheet" />
+    <style>
+      /* Nếu bạn chưa có CSS, đây là style cơ bản dễ nhìn */
+      body { font-family: Arial, sans-serif; padding: 20px; }
+      .heading { text-align: center; margin-bottom: 20px; }
+      .container { max-width: 600px; margin: auto; }
+      label { display: block; margin-top: 10px; }
+      input, select { width: 100%; padding: 8px; margin-top: 5px; }
+      input[type="submit"] { margin-top: 15px; cursor: pointer; background-color: #4CAF50; color: white; border: none; }
+      table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+      th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+      th { background-color: #f2f2f2; }
+    </style>
 </head>
-
 <body>
-    <h1 class="heading"> Book Management </h1>
+    <h1 class="heading">Book Management</h1>
     <div class="container">
-        <form action="#">
-
+        <form id="book-form">
             <label for="fname">Book name</label>
-            <input type="text" id="fname" name="name" placeholder="Book name...">
+            <input type="text" id="fname" name="name" placeholder="Book name..." required />
 
             <label for="lname">Page Count</label>
-            <input type="number" id="lname" name="page-count" placeholder="Page count...">
-            <label for="country">Author</label>
-            <select id="author" name="author">
+            <input type="number" id="lname" name="page-count" placeholder="Page count..." required />
 
+            <label for="author">Author</label>
+            <select id="author" name="author" required>
+                <option value="">-- Select Author --</option>
             </select>
+
             <label for="category">Category</label>
-            <select id="category" name="category">
-
+            <select id="category" name="category" required>
+                <option value="">-- Select Category --</option>
             </select>
 
-            <input type="submit" value="Submit">
-
+            <input type="submit" value="Submit" />
         </form>
-        </div>
-        <table id="book-block">
-        </table>
-        <script src="{{ url_for('static', filename='js/call_API.js') }}"></script>
-</body>
 
+        <table id="book-block">
+            <!-- Bảng sẽ được điền dữ liệu từ JS -->
+        </table>
+    </div>
+
+<script>
+    const getBookApi = "http://127.0.0.1:5000/book-management/books";
+    const addBookApi = "http://127.0.0.1:5000/book-management/book";
+    const getAuthorApi = "http://127.0.0.1:5000/author-management/authors";
+    const getCategoryApi = "http://127.0.0.1:5000/category-management/categories";
+
+    function loadBook() {
+        const titleTable = "<tr><th>Id</th><th>Name</th><th>Page Count</th></tr>";
+        fetch(getBookApi)
+            .then(response => response.json())
+            .then(books => {
+                const rows = books.map(book => `
+                    <tr>
+                        <td>${book.id}</td>
+                        <td>${book.name}</td>
+                        <td>${book.page_count}</td>
+                    </tr>
+                `).join('');
+                document.getElementById("book-block").innerHTML = titleTable + rows;
+            })
+            .catch(error => console.error("Error loading books:", error));
+    }
+
+    function loadAuthor() {
+        fetch(getAuthorApi)
+            .then(response => response.json())
+            .then(authors => {
+                const options = authors.map(author =>
+                    `<option value="${author.id}">${author.name}</option>`
+                ).join('');
+                document.getElementById("author").innerHTML = `<option value="">-- Select Author --</option>` + options;
+            })
+            .catch(error => console.error("Error loading authors:", error));
+    }
+
+    function loadCategory() {
+        fetch(getCategoryApi)
+            .then(response => response.json())
+            .then(categories => {
+                const options = categories.map(cat =>
+                    `<option value="${cat.id}">${cat.name}</option>`
+                ).join('');
+                document.getElementById("category").innerHTML = `<option value="">-- Select Category --</option>` + options;
+            })
+            .catch(error => console.error("Error loading categories:", error));
+    }
+
+    function handleCreateForm() {
+        const form = document.getElementById('book-form');
+        form.onsubmit = function(event) {
+            event.preventDefault();
+            const name = form.name.value.trim();
+            const pageCount = form['page-count'].value;
+            const authorId = form.author.value;
+            const categoryId = form.category.value;
+
+            if (name && pageCount && authorId && categoryId) {
+                const data = {
+                    name: name,
+                    page_count: Number(pageCount),
+                    author_id: Number(authorId),
+                    category_id: Number(categoryId)
+                };
+                createBook(data, loadBook);
+            } else {
+                alert("Please fill in all fields correctly.");
+            }
+        }
+    }
+
+    function createBook(data, callback){
+    fetch(addBookApi, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())  // Nhận JSON
+    .then(res => {
+        alert(res.message);
+        if (res.message.toLowerCase().includes('success')) {
+            callback();  // Tải lại danh sách sách
+            document.getElementById('book-form').reset();
+        }
+    })
+    .catch(error => console.error("Error adding book:", error));
+}
+
+    // Khi trang tải xong
+    document.addEventListener('DOMContentLoaded', function() {
+        loadBook();
+        loadAuthor();
+        loadCategory();
+        handleCreateForm();
+    });
+</script>
+</body>
 </html>
