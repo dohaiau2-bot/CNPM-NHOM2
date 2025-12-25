@@ -58,5 +58,36 @@
     </div>
 </div>
 
+<h1 class="mt-4">Danh sách sách</h1>
+
+<div class="container">
+    <!-- Bảng sách -->
+    <table id="book-block" class="table table-striped table-bordered">
+        <!-- Bảng sẽ được JS đổ dữ liệu -->
+    </table>
+</div>
+
+<script>
+    const getBookApi = "{{ url_for('books.get_all_books') }}"; 
+    function loadBook() {
+        const titleTable = `<thead><tr><th>Id</th><th>Name</th><th>Page Count</th></tr></thead>`;
+        fetch(getBookApi)
+            .then(response => response.json())
+            .then(books => {
+                const rows = books.map(book => `
+                    <tr>
+                        <td>${book.id}</td>
+                        <td>${book.name}</td>
+                        <td>${book.page_count}</td>
+                    </tr>
+                `).join('');
+                document.getElementById("book-block").innerHTML = titleTable + `<tbody>` + rows + `</tbody>`;
+            })
+            .catch(error => console.error("Error loading books:", error));
+    }
+
+    document.addEventListener('DOMContentLoaded', loadBook);
+</script>
+
 
 {% endblock %}
