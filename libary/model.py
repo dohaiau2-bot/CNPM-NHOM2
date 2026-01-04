@@ -50,3 +50,14 @@ class Author(db.Model):
     name=db.Column(db.String(100),unique=True,nullable=False)
     def __init__(self,name):
         self.name=name
+
+class WorkShift(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    staff_name = db.Column(db.String(100), nullable=False) # Tên nhân viên
+    shift_type = db.Column(db.String(50))  # Ca Sáng, Chiều, Tối
+    work_date = db.Column(db.Date)         # Ngày trực
+
+    def __init__(self, staff_name, shift_type, work_date):
+        self.staff_name = staff_name
+        self.shift_type = shift_type
+        self.work_date = work_date
