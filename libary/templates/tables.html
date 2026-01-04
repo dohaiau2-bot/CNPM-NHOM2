@@ -7,19 +7,19 @@
     <div class="container-fluid px-4">
         <h1 class="mt-4">Quản lý ca trực</h1>
         <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item"><a href="dashboard.html">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
             <li class="breadcrumb-item active">Ca trực</li>
         </ol>
 
         <div class="row">
             <div class="col-xl-3 col-md-6">
                 <div class="card bg-primary text-white mb-4">
-                    <div class="card-body">Tổng ca hôm nay: 4</div>
+                    <div class="card-body">Tổng ca hôm nay: <span id="totalShifts">0</span></div>
                 </div>
             </div>
             <div class="col-xl-3 col-md-6">
                 <div class="card bg-warning text-white mb-4">
-                    <div class="card-body">Chưa check-in: 1</div>
+                    <div class="card-body">Chưa check-in: 0</div>
                 </div>
             </div>
         </div>
@@ -35,67 +35,17 @@
                 </button>
             </div>
             <div class="card-body">
-                <table id="datatablesSimple">
+                <table id="datatablesSimple" class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th>Mã ca</th>
+                            <th>ID</th>
                             <th>Tên nhân viên</th>
                             <th>Ca làm việc</th>
                             <th>Ngày trực</th>
-                            <th>Thời gian</th>
-                            <th>Trạng thái</th>
                             <th>Hành động</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Mã ca</th>
-                            <th>Tên nhân viên</th>
-                            <th>Ca làm việc</th>
-                            <th>Ngày trực</th>
-                            <th>Thời gian</th>
-                            <th>Trạng thái</th>
-                            <th>Hành động</th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        <tr>
-                            <td>CT001</td>
-                            <td>Nguyễn Văn A</td>
-                            <td>Ca Sáng</td>
-                            <td>2023-10-27</td>
-                            <td>07:00 - 11:30</td>
-                            <td><span class="badge bg-success">Đã hoàn thành</span></td>
-                            <td>
-                                <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>CT002</td>
-                            <td>Trần Thị B</td>
-                            <td>Ca Chiều</td>
-                            <td>2023-10-27</td>
-                            <td>13:00 - 17:00</td>
-                            <td><span class="badge bg-warning text-dark">Đang trực</span></td>
-                            <td>
-                                <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>CT003</td>
-                            <td>Lê Văn C</td>
-                            <td>Ca Tối</td>
-                            <td>2023-10-28</td>
-                            <td>17:30 - 21:30</td>
-                            <td><span class="badge bg-secondary">Chưa diễn ra</span></td>
-                            <td>
-                                <button class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
-                                <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-
+                    <tbody id="tableBody">
                         </tbody>
                 </table>
             </div>
@@ -111,34 +61,126 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="" method="POST">
+                <form id="shiftForm">
                     <div class="mb-3">
-                        <label for="employeeSelect" class="form-label">Nhân viên</label>
-                        <select class="form-select" id="employeeSelect">
-                            <option selected>Chọn nhân viên...</option>
-                            <option value="1">Nguyễn Văn A</option>
-                            <option value="2">Trần Thị B</option>
-                        </select>
+                        <label for="staffName" class="form-label">Tên nhân viên</label>
+                        <input type="text" class="form-control" id="staffName" placeholder="Nhập tên nhân viên..." required>
                     </div>
+
                     <div class="mb-3">
                         <label for="shiftType" class="form-label">Loại ca</label>
                         <select class="form-select" id="shiftType">
-                            <option value="sang">Ca Sáng (7:00 - 11:30)</option>
-                            <option value="chieu">Ca Chiều (13:00 - 17:00)</option>
-                            <option value="toi">Ca Tối (17:30 - 21:30)</option>
+                            <option value="Ca Sáng">Ca Sáng (7:00 - 11:30)</option>
+                            <option value="Ca Chiều">Ca Chiều (13:00 - 17:00)</option>
+                            <option value="Ca Tối">Ca Tối (17:30 - 21:30)</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="shiftDate" class="form-label">Ngày trực</label>
-                        <input type="date" class="form-control" id="shiftDate">
+                        <label for="workDate" class="form-label">Ngày trực</label>
+                        <input type="date" class="form-control" id="workDate" required>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary">Lưu thay đổi</button>
+                <button type="button" class="btn btn-primary" onclick="addShift()">Lưu thay đổi</button>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const API_URL = '/api/shifts/'; 
+
+    // Chạy khi trang load xong
+    document.addEventListener('DOMContentLoaded', loadShifts);
+
+    // 1. Hàm tải danh sách
+    async function loadShifts() {
+        try {
+            const res = await fetch(API_URL);
+            const data = await res.json();
+            
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = ''; // Xóa dữ liệu cũ
+
+            // Cập nhật số lượng tổng trên Dashboard
+            if(document.getElementById('totalShifts')) {
+                document.getElementById('totalShifts').innerText = data.length;
+            }
+
+            data.forEach(item => {
+                const row = `
+                    <tr>
+                        <td>${item.id}</td>
+                        <td>${item.staff_name}</td>
+                        <td><span class="badge bg-info text-dark">${item.shift_type}</span></td>
+                        <td>${item.work_date}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="deleteShift(${item.id})">
+                                <i class="fas fa-trash"></i> Xóa
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    // 2. Hàm Thêm mới
+    async function addShift() {
+        const name = document.getElementById('staffName').value;
+        const type = document.getElementById('shiftType').value;
+        const date = document.getElementById('workDate').value;
+
+        if (!name || !date) {
+            alert("Vui lòng nhập tên và ngày!");
+            return;
+        }
+
+        const payload = {
+            staff_name: name,
+            shift_type: type,
+            work_date: date
+        };
+
+        try {
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (res.ok) {
+                alert("Thêm thành công!");
+                
+                // Đóng modal (Yêu cầu Bootstrap 5)
+                const modalEl = document.getElementById('addShiftModal');
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                modal.hide();
+
+                // Reset form
+                document.getElementById('shiftForm').reset();
+                loadShifts(); // Tải lại bảng
+            } else {
+                alert("Lỗi khi thêm!");
+            }
+        } catch (err) { console.error(err); }
+    }
+
+    // 3. Hàm Xóa
+    async function deleteShift(id) {
+        if(!confirm("Bạn chắc chắn muốn xóa?")) return;
+        
+        try {
+            const res = await fetch(API_URL + id, { method: 'DELETE' });
+            if(res.ok) loadShifts();
+        } catch (err) { console.error(err); }
+    }
+</script>
 {% endblock %}
