@@ -30,3 +30,7 @@ def update_author_serv(id):
             db.session.rollback()
             return jsonify({"message": "Update failed"}), 400
     return jsonify({"message": "Author not found"}), 404
+
+def get_all_books_serv():
+    books = Books.query.all()
+    return books_schema.jsonify(books)
