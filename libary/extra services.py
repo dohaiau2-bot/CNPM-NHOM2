@@ -12,3 +12,9 @@ cat_schema = CatSchema()
 cats_schema = CatSchema(many=True)
 book_schema = BookSchema()
 books_schema = BookSchema(many=True)
+
+def get_author_by_id_serv(id):
+    author = Author.query.get(id)
+    if author:
+        return author_schema.jsonify(author)
+    return jsonify({"message": "Author not found"}), 404   
