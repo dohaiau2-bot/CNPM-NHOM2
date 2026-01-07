@@ -42,19 +42,27 @@ def get_all_books_service():
         return "Not found book"
     
 def update_book_by_id_service(id):
-    book= Books.query.get(id)
-    data= request.json
+    book = Books.query.get(id)
+    data = request.json
     if book:
-        if data and "page_count" in data:
-            try:
-                book.page_count = data["page_count"]
-                db.session.commit()
-                return "Book updated!"
-            except Exception as e:
-                db.session.rollback()
-                return "can not update book"
+        try:
+            # Kiểm tra và cập nhật từng trường nếu có dữ liệu gửi lên
+            if 'name' in data:
+                book.name = data['name']
+            if 'page_count' in data:
+                book.page_count = data['page_count']
+            if 'author_id' in data:
+                book.author_id = data['author_id']
+            if 'category_id' in data:
+                book.category_id = data['category_id']
+            
+            db.session.commit()
+            return jsonify({"message": "Book updated successfully!", "id": id})
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": f"Cannot update book: {str(e)}"}), 500
     else:
-        return "Not found book"
+        return jsonify({"error": "Book not found"}), 404
 
 def delete_book_by_id_service(id):
     book= Books.query.get(id)
@@ -76,3 +84,16 @@ def get_book_by_author_service(author):
         return books_schema.jsonify(books)
     else:
         return ("Author not found !")
+def search_books_service():
+    # Lấy tham số 'name' từ URL
+    search_query = request.args.get('name', '')
+
+    if search_query:
+        # Nếu có từ khóa: Tìm kiếm gần đúng (ilike)
+        results = Books.query.filter(Books.name.ilike(f'%{search_query}%')).all()
+    else:
+        # Nếu KHÔNG có từ khóa (ô tìm kiếm rỗng): Lấy TẤT CẢ sách
+        results = Books.query.all()
+    
+    # Trả về JSON để JavaScript ở giao diện đọc được
+    return books_schema.jsonify(results)

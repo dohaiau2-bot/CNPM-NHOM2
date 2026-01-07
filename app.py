@@ -109,6 +109,10 @@ def libary():
 def books_management():
     return render_template('books.html')
 
+@app.route('/delete_books')
+@login_required
+def delete_book_page():
+    return render_template('delete.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

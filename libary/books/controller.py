@@ -1,7 +1,7 @@
-from flask import Blueprint
+from flask import Blueprint, render_template
 from .services import (add_book_service,get_book_by_id_service,get_all_books_service,
                         update_book_by_id_service,delete_book_by_id_service,
-                        get_book_by_author_service)
+                        get_book_by_author_service, search_books_service)
 books=Blueprint("books",__name__)
 
 
@@ -29,3 +29,16 @@ def delete_book_by_id(id):
 @books.route("/book-management/book/author/<string:author>",methods=['GET'])
 def get_book_by_author(author):
     return get_book_by_author_service(author)
+
+@books.route("/delete-books-page", methods=['GET'])
+def delete_book_page():
+    return render_template('delete.html')
+
+@books.route("/book-management/books/search-api", methods=['GET'])
+def search_books_api():
+    return search_books_service()
+
+# Route hiển thị trang quản lý sách (render ra file HTML)
+@books.route('/books') 
+def books_management():
+    return render_template('books.html')
