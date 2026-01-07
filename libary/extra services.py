@@ -41,3 +41,11 @@ def count_stats_serv():
 def get_all_books_serv():
     books = Books.query.all()
     return books_schema.jsonify(books)
+def quick_delete_book(id):
+    # Admin only function
+    book = Books.query.get(id)
+    if book:
+        db.session.delete(book)
+        db.session.commit()
+        return "Deleted"
+    return "Not Found"
