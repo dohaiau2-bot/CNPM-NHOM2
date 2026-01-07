@@ -49,3 +49,4 @@ def quick_delete_book(id):
         db.session.commit()
         return "Deleted"
     return "Not Found"
+# Updated services for extra functionality extension
