@@ -50,4 +50,5 @@ def quick_delete_book(id):
         return "Deleted"
     return "Not Found"
 # Updated services for extra functionality extension
-    
+if __name__ == "__main__":
+    print("Services module loaded")
