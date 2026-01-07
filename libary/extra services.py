@@ -5,7 +5,7 @@ from libary.model import Students, Category, Author, Books
 from flask import jsonify, request
 from sqlalchemy.exc import IntegrityError
 from datetime import timedelta
-
+    
 # Init schemas
 author_schema = AuthorSchema()
 authors_schema = AuthorSchema(many=True)
@@ -13,6 +13,9 @@ cat_schema = CatSchema()
 cats_schema = CatSchema(many=True)
 book_schema = BookSchema()
 books_schema = BookSchema(many=True)
+# Student Schemas
+student_schema = StudentSchema()
+students_schema = StudentSchema(many=True)
 
 def get_author_by_id_serv(id):
     author = Author.query.get(id)
