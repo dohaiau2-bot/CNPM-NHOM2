@@ -5,7 +5,7 @@ from libary.model import Students, Category, Author, Books
 from flask import jsonify, request
 from sqlalchemy.exc import IntegrityError
 from datetime import timedelta
-    
+
 # Init schemas
 author_schema = AuthorSchema()
 authors_schema = AuthorSchema(many=True)
@@ -62,6 +62,10 @@ def validate_input_data(data):
 def get_current_timestamp_serv():
     now = datetime.now()
     return jsonify({"timestamp": now.isoformat()})
+
+def get_all_students_serv():
+    students = Students.query.all()
+    return students_schema.jsonify(students)
 
 # Updated services for extra functionality extension
 if __name__ == "__main__":
