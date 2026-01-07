@@ -18,3 +18,15 @@ def get_author_by_id_serv(id):
     if author:
         return author_schema.jsonify(author)
     return jsonify({"message": "Author not found"}), 404   
+def update_author_serv(id):
+    author = Author.query.get(id)
+    if author:
+        try:
+            name = request.json['name']
+            author.name = name
+            db.session.commit()
+            return author_schema.jsonify(author)
+        except IntegrityError:
+            db.session.rollback()
+            return jsonify({"message": "Update failed"}), 400
+    return jsonify({"message": "Author not found"}), 404
