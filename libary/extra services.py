@@ -56,6 +56,9 @@ def validate_input_data(data):
     if 'name' not in data:
         return False
     return True
+def get_current_timestamp_serv():
+    now = datetime.now()
+    return jsonify({"timestamp": now.isoformat()})
 
 # Updated services for extra functionality extension
 if __name__ == "__main__":
