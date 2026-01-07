@@ -1,13 +1,13 @@
 import logging
 from datetime import datetime
 
-# Cấu hình logging để nhìn cho chuyên nghiệp
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 class StudentService:
     def __init__(self):
-        # Giả lập kết nối database hoặc khởi tạo context
+     
         self.context = "DatabaseConnectionString"
         logger.info("StudentService initialized successfully.")
 
@@ -24,8 +24,8 @@ def get_student_by_id(self, student_id):
             
             logger.info(f"Attempting to retrieve student with ID: {student_id}")
             
-            # Giả lập logic lấy dữ liệu (Code thật sẽ là truy vấn SQL)
-            # TODO: Implement actual database query here
+           
+            # TODO: 
             if student_id <= 0:
                 raise ValueError("Invalid student ID")
                 
