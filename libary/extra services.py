@@ -34,3 +34,7 @@ def update_author_serv(id):
 def get_all_books_serv():
     books = Books.query.all()
     return books_schema.jsonify(books)
+def count_stats_serv():
+    a_count = Author.query.count()
+    c_count = Category.query.count()
+    return jsonify({"authors": a_count, "categories": c_count})
