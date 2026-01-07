@@ -1,39 +1,182 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
+
 {% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Quản lý Sách</h2>
 
-<h1 class="mt-4">Quản lý sách</h1>
+    <div class="input-group mb-3">
+        <input type="text" id="searchInput" class="form-control" placeholder="Nhập tên sách để tìm..." onkeyup="loadBooks()">
+        <button class="btn btn-primary" onclick="loadBooks()">Tìm</button>
+    </div>
 
-<button class="btn btn-primary mb-3" onclick="loadBooks()">Load books</button>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Tên Sách</th>
+                <th>Số trang</th>
+                <th>Tác giả (ID)</th>
+                <th>Thể loại (ID)</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            </tbody>
+    </table>
+</div>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Tên sách</th>
-            <th>Tác giả</th>
-        </tr>
-    </thead>
-    <tbody id="book-table"></tbody>
-</table>
+<div class="modal fade" id="editBookModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cập nhật thông tin sách</h5>
+        <button type="button" class="close" data-dismiss="modal" onclick="$('#editBookModal').modal('hide')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editBookId"> 
+        
+        <div class="form-group">
+            <label>Tên sách</label>
+            <input type="text" id="editName" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>Số trang</label>
+            <input type="number" id="editPageCount" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>ID Tác giả</label>
+            <input type="number" id="editAuthorId" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>ID Thể loại</label>
+            <input type="number" id="editCategoryId" class="form-control">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="$('#editBookModal').modal('hide')">Hủy</button>
+        <button type="button" class="btn btn-primary" onclick="submitUpdateBook()">Lưu thay đổi</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
-function loadBooks() {
-    fetch("/library/books")
-        .then(res => res.json())
-        .then(data => {
-            let html = "";
+    // 1. Hàm load danh sách (Tìm kiếm)
+    async function loadBooks() {
+        const query = document.getElementById('searchInput').value;
+        const tableBody = document.getElementById('tableBody');
+        const url = `/book-management/books/search-api?name=${query}`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            tableBody.innerHTML = '';
+
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Không tìm thấy sách nào</td></tr>';
+                return;
+            }
+
+            let htmlContent = '';
             data.forEach(book => {
-                html += `
+                // CHÚ Ý DÒNG NÚT SỬA: Đã thêm sự kiện onclick để mở Modal
+                htmlContent += `
                     <tr>
                         <td>${book.id}</td>
                         <td>${book.name}</td>
-                        <td>${book.author}</td>
+                        <td>${book.page_count}</td>
+                        <td>${book.author_id}</td>
+                        <td>${book.category_id}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" 
+                                onclick="openEditModal(${book.id}, '${book.name}', ${book.page_count}, ${book.author_id}, ${book.category_id})">
+                                Sửa
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteBook(${book.id})">Xóa</button>
+                        </td>
                     </tr>
                 `;
             });
-            document.getElementById("book-table").innerHTML = html;
-        });
-}
-</script>
+            tableBody.innerHTML = htmlContent;
 
+        } catch (error) {
+            console.error('Lỗi tải dữ liệu:', error);
+        }
+    }
+
+    // 2. Hàm Mở Modal và điền dữ liệu cũ (Được gọi khi bấm nút Sửa)
+    function openEditModal(id, name, page, author, category) {
+        // Điền dữ liệu vào các ô input trong Modal
+        document.getElementById('editBookId').value = id;
+        document.getElementById('editName').value = name;
+        document.getElementById('editPageCount').value = page;
+        document.getElementById('editAuthorId').value = author;
+        document.getElementById('editCategoryId').value = category;
+
+        // Mở Modal lên (Sử dụng jQuery của Bootstrap)
+        $('#editBookModal').modal('show');
+    }
+
+    // 3. Hàm Gửi dữ liệu cập nhật (Được gọi khi bấm nút Lưu trong Modal)
+    async function submitUpdateBook() {
+        const id = document.getElementById('editBookId').value;
+        
+        // Tạo cục dữ liệu JSON để gửi đi
+        const payload = {
+            name: document.getElementById('editName').value,
+            page_count: document.getElementById('editPageCount').value,
+            author_id: document.getElementById('editAuthorId').value,
+            category_id: document.getElementById('editCategoryId').value
+        };
+
+        try {
+            // Gọi API PUT mà bạn đã viết trong Controller
+            const response = await fetch(`/book-management/book/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert("Cập nhật thành công!");
+                $('#editBookModal').modal('hide'); // Ẩn Modal
+                loadBooks(); // Tải lại bảng để thấy dữ liệu mới
+            } else {
+                alert("Lỗi: " + (result.message || result.error));
+            }
+        } catch (error) {
+            console.error("Lỗi:", error);
+            alert("Có lỗi xảy ra khi kết nối server");
+        }
+    }
+
+    // 4. Hàm Xóa (Giữ nguyên hoặc thêm vào nếu chưa có)
+    async function deleteBook(id) {
+        if(!confirm("Bạn có chắc muốn xóa sách này không?")) return;
+
+        try {
+            const response = await fetch(`/book-management/book/${id}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                alert("Đã xóa!");
+                loadBooks();
+            } else {
+                alert("Không thể xóa sách này.");
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    // Chạy khi trang vừa tải xong
+    window.onload = loadBooks;
+</script>
 {% endblock %}

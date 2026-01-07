@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Xóa Sách{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">Quản lý Xóa Sách</h1>
+<ol class="breadcrumb mb-4">
+    <li class="breadcrumb-item"><a href="{{ url_for('books.delete_book_page') }}">Dashboard</a></li> <li class="breadcrumb-item active">Xóa sách</li>
+</ol>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-trash me-1"></i>
+        Danh sách sách (Nhấn nút đỏ để xóa)
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped" id="deleteTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên Sách</th>
+                        <th>Số trang</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="book-list-body">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // URL API lấy danh sách sách
+    const getBookApi = "{{ url_for('books.get_all_books') }}";
+    
+    // Hàm load danh sách sách
+    function loadBooksForDelete() {
+        fetch(getBookApi)
+            .then(response => response.json())
+            .then(books => {
+                const tbody = document.getElementById("book-list-body");
+                tbody.innerHTML = ""; // Xóa nội dung cũ
+
+                if (Array.isArray(books)) {
+                    books.forEach(book => {
+                        const row = `
+                            <tr id="row-${book.id}">
+                                <td>${book.id}</td>
+                                <td>${book.name}</td>
+                                <td>${book.page_count}</td>
+                                <td class="text-center">
+                                    <button class="btn btn-danger btn-sm" onclick="deleteBook(${book.id}, '${book.name}')">
+                                        <i class="fas fa-trash-alt"></i> Xóa
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                        tbody.innerHTML += row;
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center">Không có sách nào hoặc lỗi tải dữ liệu.</td></tr>';
+                }
+            })
+            .catch(error => console.error("Error loading books:", error));
+    }
+
+    // Hàm thực hiện xóa sách
+    function deleteBook(bookId, bookName) {
+        // Hỏi xác nhận trước khi xóa
+        if (!confirm(`Bạn có chắc chắn muốn xóa sách: "${bookName}" không?`)) {
+            return;
+        }
+
+        // Gọi API xóa (dựa trên route: /book-management/book/<int:id>)
+        const deleteUrl = `/book-management/book/${bookId}`;
+
+        fetch(deleteUrl, {
+            method: 'DELETE'
+        })
+        .then(response => response.text()) // API của bạn trả về string ("Book deleted!" hoặc lỗi)
+        .then(message => {
+            if (message.includes("deleted")) {
+                alert("Xóa thành công!");
+                // Xóa dòng tương ứng trên giao diện mà không cần reload trang
+                document.getElementById(`row-${bookId}`).remove();
+            } else {
+                alert("Lỗi: " + message);
+            }
+        })
+        .catch(error => {
+            console.error("Error deleting book:", error);
+            alert("Có lỗi xảy ra khi gọi server.");
+        });
+    }
+
+    // Load sách khi trang vừa tải xong
+    document.addEventListener('DOMContentLoaded', loadBooksForDelete);
+</script>
+{% endblock %}

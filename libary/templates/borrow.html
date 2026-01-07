@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4 text-primary">Quản Lý Mượn Trả Sách</h2>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">Tạo Phiếu Mượn Mới</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label">ID Học Sinh</label>
+                    <input type="number" id="inpStudentId" class="form-control" placeholder="Nhập ID...">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">ID Sách</label>
+                    <input type="number" id="inpBookId" class="form-control" placeholder="Nhập ID...">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Ngày mượn</label>
+                    <input type="date" id="inpBorrowDate" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Hạn trả</label>
+                    <input type="date" id="inpReturnDate" class="form-control">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-success w-100" onclick="borrowBook()">
+                        <i class="fa fa-plus"></i> Mượn
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-striped table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID Phiếu</th>
+                        <th>Học Sinh</th>
+                        <th>Sách</th>
+                        <th>Ngày Mượn</th>
+                        <th>Hạn Trả</th>
+                        <th class="text-center">Trạng Thái</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. Load bảng khi vào trang
+    window.onload = function() {
+        document.getElementById('inpBorrowDate').valueAsDate = new Date(); // Set ngày mặc định
+        loadTable();
+    };
+
+    // 2. Hàm lấy dữ liệu và vẽ bảng
+    async function loadTable() {
+        try {
+            const res = await fetch('/api/borrows');
+            const data = await res.json();
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = ''; // Xóa dữ liệu cũ
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center">Chưa có dữ liệu mượn sách</td></tr>';
+                return;
+            }
+
+            data.forEach(item => {
+                let statusHtml = '';
+                if (item.is_returned) {
+                    // Đã trả: Hiện badge xanh
+                    statusHtml = `<span class="badge bg-success">Đã trả sách</span>`;
+                } else {
+                    // Chưa trả: Hiện nút bấm
+                    statusHtml = `
+                        <button class="btn btn-sm btn-outline-warning" onclick="confirmReturn(${item.id})">
+                            <i class="fa fa-check-square-o"></i> Xác nhận trả
+                        </button>
+                    `;
+                }
+
+                const row = `
+                    <tr>
+                        <td>${item.id}</td>
+                        <td>${item.student_name}</td>
+                        <td>${item.book_name}</td>
+                        <td>${item.borrow_date}</td>
+                        <td>${item.return_date}</td>
+                        <td class="text-center">${statusHtml}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        } catch (error) {
+            console.error("Lỗi tải bảng:", error);
+        }
+    }
+
+    // 3. Hàm Mượn Sách
+    async function borrowBook() {
+        const payload = {
+            student_id: document.getElementById('inpStudentId').value,
+            book_id: document.getElementById('inpBookId').value,
+            borrow_date: document.getElementById('inpBorrowDate').value,
+            return_date: document.getElementById('inpReturnDate').value
+        };
+
+        if (!payload.student_id || !payload.book_id) {
+            alert("Vui lòng nhập ID sách và ID học sinh!");
+            return;
+        }
+
+        const res = await fetch('/api/borrows', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const result = await res.json();
+        if (res.ok) {
+            alert("Thành công!");
+            loadTable(); // Cập nhật lại bảng
+            // Xóa input
+            document.getElementById('inpBookId').value = '';
+            document.getElementById('inpStudentId').value = '';
+        } else {
+            alert("Lỗi: " + result.message);
+        }
+    }
+
+    // 4. Hàm Xác Nhận Trả
+    async function confirmReturn(borrowId) {
+        if (!confirm("Xác nhận đã thu hồi sách này?")) return;
+
+        const res = await fetch(`/api/borrows/return/${borrowId}`, {
+            method: 'PUT'
+        });
+
+        if (res.ok) {
+            loadTable(); // Cập nhật lại bảng ngay lập tức
+        } else {
+            alert("Có lỗi xảy ra!");
+        }
+    }
+</script>
+{% endblock %}

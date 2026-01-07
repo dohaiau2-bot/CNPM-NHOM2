@@ -33,12 +33,15 @@ class Borrows(db.Model):
     student_id=db.Column(db.Integer,db.ForeignKey('students.id'))
     borrow_date=db.Column(db.Date)
     return_date=db.Column(db.Date)
+    is_returned = db.Column(db.Boolean, default=False)
 
-    def __init__(self,book_id,student_id,borrow_date,return_date):
+    def __init__(self,book_id,student_id,borrow_date,return_date,is_returned=False):
         self.book_id=book_id
         self.student_id=student_id
         self.borrow_date=borrow_date
         self.return_date=return_date
+        self.is_returned = is_returned
+
 class Category(db.Model):
     id=db.Column(db.Integer,primary_key=True)
     name=db.Column(db.String(100),unique=True,nullable=False)

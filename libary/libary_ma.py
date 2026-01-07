@@ -22,6 +22,7 @@ class BorrowSchema(ma.Schema):
     student_id = fields.Int(required=True)
     borrow_date = fields.Date()
     return_date = fields.Date(allow_none=True)
+    is_returned = fields.Bool()
 
 class BookSchema(ma.Schema):
     id = fields.Int(dump_only=True)
