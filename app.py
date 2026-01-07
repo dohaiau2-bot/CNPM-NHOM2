@@ -104,6 +104,11 @@ def tables():
 def libary():
     return render_template('manangement.html')
 
+@app.route('/books')
+@login_required
+def books_management():
+    return render_template('books.html')
+
 
 if __name__ == "__main__":
     app.run(debug=True)
