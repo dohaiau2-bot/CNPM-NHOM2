@@ -37,3 +37,22 @@ def get_student_by_id(self, student_id):
         except Exception as e:
             logger.critical(f"System error in get_student_by_id: {str(e)}")
             raise e
+def validate_student_data(self, data):
+        """Kiểm tra tính hợp lệ của dữ liệu sinh viên đầu vào"""
+        errors = []
+        
+        if not data:
+            errors.append("Payload is empty")
+            return False, errors
+
+        if 'email' not in data or '@' not in data['email']:
+            errors.append("Invalid email format")
+            
+        if 'age' in data and (data['age'] < 18 or data['age'] > 100):
+            errors.append("Age must be between 18 and 100")
+            
+        if errors:
+            logger.error(f"Data validation failed: {errors}")
+            return False, errors
+            
+        return True, []
