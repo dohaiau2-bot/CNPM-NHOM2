@@ -50,6 +50,12 @@ def quick_delete_book(id):
         db.session.commit()
         return "Deleted"
     return "Not Found"
+def validate_input_data(data):
+    if not data:
+        return False
+    if 'name' not in data:
+        return False
+    return True
 
 # Updated services for extra functionality extension
 if __name__ == "__main__":
