@@ -1,0 +1,41 @@
+* [33mf56e769[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/Update-html[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mUpdate-html[m[33m)[m restore
+* [33m70052d3[m Tích hợp tính năng tìm kiếm vào project
+* [33m5cd0fc1[m Tích hợp hoàn chỉnh các tính năng
+*   [33mc124ebe[m Merge pull request #6 from dohaiau2-bot/delete_books_MVC
+[32m|[m[33m\[m  
+[32m|[m * [33m15d9558[m Full source delete books MVC
+[32m|[m[32m/[m  
+*   [33m921bb49[m Merge pull request #5 from dohaiau2-bot/Update-html
+[34m|[m[35m\[m  
+[34m|[m * [33mc2b8190[m Tich hop API ca truc
+* [35m|[m   [33m4b0264e[m Merge pull request #4 from dohaiau2-bot/suathongtinsach
+[36m|[m[1;31m\[m [35m\[m  
+[36m|[m * [35m|[m [33m4c5c5b3[m suabookkk
+* [1;31m|[m [35m|[m   [33m4f080f0[m Merge pull request #3 from dohaiau2-bot/Update-html
+[1;31m|[m[35m\[m [1;31m\[m [35m\[m  
+[1;31m|[m [35m|[m[1;31m/[m [35m/[m  
+[1;31m|[m[1;31m/[m[35m|[m [35m/[m   
+[1;31m|[m [35m|[m[35m/[m    
+[1;31m|[m * [33mbb5f47d[m Update giao diện trang chủ, thêm nhánh ca trực+ tích hợp js+css để hiển thị ca trực
+[1;31m|[m[1;31m/[m  
+* [33ma9fa2b3[m Fixed JS cant load api
+*   [33mfe7ce36[m Update html
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33mc9937d2[m Create README.md
+* [1;35m|[m [33m7079d17[m  update manangement.html
+[1;35m|[m[1;35m/[m  
+*   [33m1710421[m Initial commit
+[1;36m|[m[31m\[m  
+[1;36m|[m *   [33m9c26118[m Merge pull request #2 from dohaiau2-bot/delete-book
+[1;36m|[m [32m|[m[33m\[m  
+[1;36m|[m [32m|[m * [33m71c3e4a[m thêm chức năng xóa sách
+[1;36m|[m [32m|[m[32m/[m  
+[1;36m|[m * [33m16e0ae1[m Delete QuanLyThuVien-Python/chucnang_xoasach.py
+[1;36m|[m *   [33m9d7f2ea[m Merge pull request #1 from dohaiau2-bot/feature-delete-book
+[1;36m|[m [34m|[m[35m\[m  
+[1;36m|[m [34m|[m * [33ma5e1505[m Thêm chức năng xóa sách (delete_book) cho hệ thống
+[1;36m|[m [34m|[m[34m/[m  
+[1;36m|[m * [33m89f1459[m cấu trúc project, mọi người code vào đây
+[1;36m|[m * [33m17a5372[m database
+[1;36m|[m * [33m3ea897d[m Initial commit
+* [33m245a498[m Initial commit
