@@ -4,6 +4,7 @@ from libary.libary_ma import StudentSchema, AuthorSchema, CatSchema, BookSchema
 from libary.model import Students, Category, Author, Books
 from flask import jsonify, request
 from sqlalchemy.exc import IntegrityError
+from datetime import timedelta
 
 # Init schemas
 author_schema = AuthorSchema()
@@ -49,6 +50,7 @@ def quick_delete_book(id):
         db.session.commit()
         return "Deleted"
     return "Not Found"
+
 # Updated services for extra functionality extension
 if __name__ == "__main__":
     print("Services module loaded")
