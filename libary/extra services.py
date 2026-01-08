@@ -89,6 +89,7 @@ def get_all_students_serv():
     students = Students.query.all()
     return students_schema.jsonify(students)
 
+
 # End of extra services module
 if __name__ == "__main__":
     print("Services module loaded")
