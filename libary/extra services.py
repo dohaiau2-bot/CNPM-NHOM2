@@ -25,6 +25,7 @@ def get_author_by_id_serv(id):
     if author:
         return author_schema.jsonify(author)
     return jsonify({"message": "Author not found"}), 404   
+    
 def update_author_serv(id):
     author = Author.query.get(id)
     if author:
@@ -43,9 +44,11 @@ def count_stats_serv():
     a_count = Author.query.count()
     c_count = Category.query.count()
     return jsonify({"authors": a_count, "categories": c_count})
+    
 def get_all_books_serv():
     books = Books.query.all()
     return books_schema.jsonify(books)
+    
 def quick_delete_book(id):
     # Admin only function
     book = Books.query.get(id)
@@ -54,12 +57,14 @@ def quick_delete_book(id):
         db.session.commit()
         return "Deleted"
     return "Not Found"
+    
 def validate_input_data(data):
     if not data:
         return False
     if 'name' not in data:
         return False
     return True
+    
 def get_current_timestamp_serv():
     now = datetime.now()
     return jsonify({"timestamp": now.isoformat()})
