@@ -21,7 +21,8 @@ cat_schema = CatSchema()
 # schema for single category
 cats_schema = CatSchema(many=True)               
 # schema for list of categories
-book_schema = BookSchema()                         # schema for single book
+book_schema = BookSchema()                     
+# schema for single book
 books_schema = BookSchema(many=True)               # schema for list of books
 # Student Schemas
 student_schema = StudentSchema()                   # schema for single student
