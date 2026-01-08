@@ -19,7 +19,8 @@ authors_schema = AuthorSchema(many=True)
 # schema for list of authors
 cat_schema = CatSchema()                          
 # schema for single category
-cats_schema = CatSchema(many=True)                 # schema for list of categories
+cats_schema = CatSchema(many=True)               
+# schema for list of categories
 book_schema = BookSchema()                         # schema for single book
 books_schema = BookSchema(many=True)               # schema for list of books
 # Student Schemas
