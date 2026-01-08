@@ -17,7 +17,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return db.session.get(User,int(user_id))
@@ -43,7 +42,6 @@ class RegisterForm(FlaskForm):
             raise ValidationError(
                 'That username already exists. Please choose a different one.')
 
-
 class LoginForm(FlaskForm):
     username = StringField(validators=[
                            InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
@@ -53,11 +51,9 @@ class LoginForm(FlaskForm):
 
     submit = SubmitField('Login')
 
-
 @app.route('/')
 def home():
     return render_template('home.html')
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -70,19 +66,16 @@ def login():
                 return redirect(url_for('dashboard'))
     return render_template('login.html', form=form)
 
-
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
     return render_template('dashboard.html')
-
 
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('login'))
-
 
 @ app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -104,6 +97,10 @@ def tables():
 def libary():
     return render_template('manangement.html')
 
+@app.route('/books')
+@login_required
+def books_management():
+    return render_template('books.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
