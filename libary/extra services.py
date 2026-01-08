@@ -1,3 +1,5 @@
+# Extra services for library module
+# Shared services of CNPM-NHOM2
 from sqlalchemy.sql.expression import except_
 from libary.extension import db
 from libary.libary_ma import StudentSchema, AuthorSchema, CatSchema, BookSchema
