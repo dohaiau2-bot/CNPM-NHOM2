@@ -37,9 +37,7 @@ def update_author_serv(id):
             return jsonify({"message": "Update failed"}), 400
     return jsonify({"message": "Author not found"}), 404
 
-def get_all_books_serv():
-    books = Books.query.all()
-    return books_schema.jsonify(books)
+
 def count_stats_serv():
     a_count = Author.query.count()
     c_count = Category.query.count()
