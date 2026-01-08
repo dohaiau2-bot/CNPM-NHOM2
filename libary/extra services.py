@@ -20,12 +20,14 @@ books_schema = BookSchema(many=True)
 student_schema = StudentSchema()
 students_schema = StudentSchema(many=True)
 
+# Get author information by id
 def get_author_by_id_serv(id):
     author = Author.query.get(id)
     if author:
         return author_schema.jsonify(author)
     return jsonify({"message": "Author not found"}), 404   
-    
+
+# Update author information
 def update_author_serv(id):
     author = Author.query.get(id)
     if author:
@@ -39,16 +41,18 @@ def update_author_serv(id):
             return jsonify({"message": "Update failed"}), 400
     return jsonify({"message": "Author not found"}), 404
 
-
+# Count authors and categories
 def count_stats_serv():
     a_count = Author.query.count()
     c_count = Category.query.count()
     return jsonify({"authors": a_count, "categories": c_count})
-    
+
+# Get all books
 def get_all_books_serv():
     books = Books.query.all()
     return books_schema.jsonify(books)
-    
+
+# Delete book by id (admin only)
 def quick_delete_book(id):
     # Admin only function
     book = Books.query.get(id)
@@ -57,18 +61,21 @@ def quick_delete_book(id):
         db.session.commit()
         return "Deleted"
     return "Not Found"
-    
+
+# Validate input data
 def validate_input_data(data):
     if not data:
         return False
     if 'name' not in data:
         return False
     return True
-    
+
+# Get current server timestamp
 def get_current_timestamp_serv():
     now = datetime.now()
     return jsonify({"timestamp": now.isoformat()})
-
+    
+# Get all students
 def get_all_students_serv():
     students = Students.query.all()
     return students_schema.jsonify(students)
