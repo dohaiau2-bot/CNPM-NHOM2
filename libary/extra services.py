@@ -13,8 +13,10 @@ from datetime import timedelta, datetime
 
 
 # ===== Schema initialization =====
-author_schema = AuthorSchema()                     # schema for single author
-authors_schema = AuthorSchema(many=True)           # schema for list of authors
+author_schema = AuthorSchema()                  
+# schema for single author
+authors_schema = AuthorSchema(many=True)   
+# schema for list of authors
 cat_schema = CatSchema()                           # schema for single category
 cats_schema = CatSchema(many=True)                 # schema for list of categories
 book_schema = BookSchema()                         # schema for single book
