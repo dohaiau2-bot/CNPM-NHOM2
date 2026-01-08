@@ -1,5 +1,8 @@
 # Extra services for library module
 # Shared services of CNPM-NHOM2
+# NOTE:
+# This service module is shared across multiple APIs.
+# Changes should be reviewed carefully to avoid breaking dependencies.
 from sqlalchemy.sql.expression import except_
 from libary.extension import db
 from libary.libary_ma import StudentSchema, AuthorSchema, CatSchema, BookSchema
@@ -48,6 +51,8 @@ def get_all_books_serv():
     books = Books.query.all()
     return books_schema.jsonify(books)
 
+# NOTE:
+# This function should be protected by admin authorization middleware.
 # Delete book by id (admin only)
 def quick_delete_book(id):
     # Admin only function
