@@ -10,15 +10,15 @@ from datetime import timedelta, datetime
 
 
 # ===== Schema initialization =====
-author_schema = AuthorSchema()
-authors_schema = AuthorSchema(many=True)
-cat_schema = CatSchema()
-cats_schema = CatSchema(many=True)
-book_schema = BookSchema()
-books_schema = BookSchema(many=True)
+author_schema = AuthorSchema()                     # schema for single author
+authors_schema = AuthorSchema(many=True)           # schema for list of authors
+cat_schema = CatSchema()                           # schema for single category
+cats_schema = CatSchema(many=True)                 # schema for list of categories
+book_schema = BookSchema()                         # schema for single book
+books_schema = BookSchema(many=True)               # schema for list of books
 # Student Schemas
-student_schema = StudentSchema()
-students_schema = StudentSchema(many=True)
+student_schema = StudentSchema()                   # schema for single student
+students_schema = StudentSchema(many=True)         # schema for list of students
 
 # ===== Author services =====
 # Get author information by id
