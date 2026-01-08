@@ -9,7 +9,7 @@ from sqlalchemy.exc import IntegrityError
 from datetime import timedelta, datetime
 
 
-# Init schemas
+# ===== Schema initialization =====
 author_schema = AuthorSchema()
 authors_schema = AuthorSchema(many=True)
 cat_schema = CatSchema()
@@ -84,6 +84,6 @@ def get_all_students_serv():
     students = Students.query.all()
     return students_schema.jsonify(students)
 
-# Updated services for extra functionality extension
+# End of extra services module
 if __name__ == "__main__":
     print("Services module loaded")
